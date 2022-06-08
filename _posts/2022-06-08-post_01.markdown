@@ -4,7 +4,7 @@ title:  "Ad. channel conversion rate declining - Root cause analysis"
 date:   2022-06-03 11:03:41 +0530
 categories: Python
 ---
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+Abstract: Conversion rate, daily count of the ads served, count of lost subscribers
 
 ```javascript
 const Razorpay = require('razorpay');
