@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Ad. channel conversion rate sudden declining - Root cause analysis"
+title:  "Ad. channel conversion rate declining - Root cause analysis"
 date:   2022-06-03 11:03:41 +0530
 categories: Python
 ---
