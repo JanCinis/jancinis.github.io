@@ -8,34 +8,41 @@ Conversion rate, daily count of the ads served, count of lost subscribers
 
 ![image](https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/conversion_rate_resized.jpg)
 
-**I. Introduction**  
+**Introduction**  
 In this article, we'll look at an example of analyzing customer behavior in terms of conversion rates on different days of the week. In this case, we're talking about a specific case where the conversion rate suddenly dropped and we had to determine the cause and calculate the consequences of the error.
 
 **Data**  
-For current project used marketing dataset based on the data of an online subscription business. The data and full code are available in [repository](https://github.com/JanCinis/ad-channel-conversion-rate-case)
+For current project used marketing dataset based on the data of an online subscription business. The libraries used are pandas and matplotlib. The data and full code are available in [repository](https://github.com/JanCinis/ad-channel-conversion-rate-case)
 
-**Identifying inconsistencies**  
+**I. Identifying inconsistencies**  
 
 1. Step – Check whether users are more likely to convert on weekends compared with weekdays.
 
-• Add day of week column to marketing
+• Add day of week column
+```python
 df = pd.read_cvs('marekting_data_2021.csv')
 df['DoW_served'] = df['date_served'].dt.dayofweek
+```
+• Function to calculate conversion rate by day of week
+```python
+def converstion_rate( df, column_names):
+	# group by column_names and calculate subscribers
+	subscribers = df[ df['convert_value'] == True].groupby(column_names)['user_id'].nunique()
+	# group by column_names and calculate total visitors  
+        total = df.groupby(column_names)['user_id'].nunique()
+	conversion_rate = subscribers/total
+	return conversion_rate
 
-• Calculate conversion rate by day of week
-DOW_subscribers = df[ df['convert_value'] == True].groupby('DoW_served', 'marketing_channel') ['user_id'].nunique()
-DOW_total = df.groupby('DoW_served', 'marketing_channel')['user_id'].nunique()
-DoW_conversion = DOW_subscribers/DOW_total
-  
-• Unstack channels
+DoW_conversion = converstion_rate(df, 'DoW_served', 'marketing_channel') 
+```    
+• Unstack channels and plot conversion rate by day of week
+```python
 DoW_df = pd.DataFrame(DoW_conversion.unstack(level=1))
-  
-• Plot conversion rate by day of week
 DoW_df.plot()
 plt.title('Conversion rate by day of week\n')
 plt.ylim(0)
 plt.show()
-
+```
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_01/Channels_conv_rate_dow.png" width="510" height="300">
 
 **Conclusion:**  
@@ -44,18 +51,17 @@ plt.show()
 
 2. Step – Check conversion by language over time, if the new marketing campaign does not apply broadly across different cultures.
 
-• Isolate the rows where marketing channel is House Ads
+• The rows where marketing channel is House Ads
+```python
 house_ads = df[df['marketing_channel']=='House Ads']
-  
-• Calculate conversion by date served, and language displayed
-lang_house_subs = house_ads [house_ads ['convert_value'] == True].groupby('date_served', 'language_displayed') ['user_id'].nunique()
-lang_house_total = house_ads.groupby('date_served', 'language_displayed')['user_id'].nunique()
-lang_house _conversion = lang_house_subs /  lang_house_total
-  
-• Unstack conv_lang_channel
+```  
+• Conversion by date served, and language displayed
+```python
+lang_house _conversion = converstion_rate(df, 'date_served', 'language_displayed')
+```    
+• Unstack conv_lang_channel and defining a function for plotting graphs
+```python
 conv_lang_df = pd.DataFrame(conv_lang_channel.unstack(level=1))
-  
-• Define function to plot
 def plotting_conversion(df):
           	for column in df:
                         	plt.plot( df.index, df [column])
@@ -64,10 +70,11 @@ def plotting_conversion(df):
                         	plt.xlabel('Date', size = 14)
                         	plt.show()
                         	plt.clf()
-  
-• Use defined plotting function to display results
+```  
+• Defined plotting function results
+```python
 plotting_conv(conv_lang_df)
-
+```
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_01/Languages_conv_rate_drop.png" width="765" height="450">
 
 **Conclusion:**  
@@ -76,20 +83,21 @@ plotting_conv(conv_lang_df)
  
 3. Step - identify what the problem is specifically so that the team doesn't repeat their mistake.
   
-• Create a new column for sorting, showing if the preferred language was shown 
+• A new column for sorting, showing if the preferred language was shown 
+```python
 house_ads['is_correct_lang'] = np.where(house_ads['language_displayed'] == house_ads['language_preferred'], 'Yes', 'No')
-  
+```  
 • Group by date_served and is_correct_lang to get a daily count of the ads served
+```python
 language_check = house_ads.groupby(['date_served', 'is_correct_lang'])['is_correct_lang'].count()
-  
-• Unstack language_check and fill missing values with 0's
-language_check_df = pd.DataFrame(language_check.unstack(level=1)).fillna(0)
-  
+```  
 • What percentage of users were not being served ads in the right language
+```python
+language_check_df = pd.DataFrame(language_check.unstack(level=1)).fillna(0)
 language_check_df['pct'] = language_check_df['Yes']/language_check_df.sum(axis=1)
 plt.plot(language_check_df.index.values, language_check_df['pct'])
 plt.show()
-
+```
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_01/Right_language_percemtage.png" width="340" height="200">
 
 **Conclusion:**  
@@ -97,51 +105,61 @@ plt.show()
 
 **II. Resolving inconsistencies**  
   
-• Calculate pre-error conversion rate. Assuming bug arose sometime around '2018-01-11'
+• Pre-error conversion rate calculation. Assuming bug arose sometime around '2018-01-11'
+```python
 house_ads_no_bug = house_ads['date_served'] < '2018-01-11']
-subscribers_before = house_ads_no_bug[ house_ads_no_bug['convert_value'] == True].groupby('language_displayed') ['user_id'].nunique()
-total_before = df.groupby('language_displayed')['user_id'].nunique()
-lang_conv_before = subscribers_before / total_before
-  
+lang_conv_before = converstion_rate(house_ads_no_bug, 'language_displayed')
+```  
 • Index other language conversion rate against English
-spanish_index = lang_conv_before['Spanish']/lang_conv_before['English'] = 1.68
-arabic_index = lang_conv_before['Arabic']/lang_conv_before['English'] = 5.04
-german_index = lang_conv_before['German']/lang_conv_before['English'] = 4.48
-  
+```python
+spanish_index = lang_conv_before['Spanish']/lang_conv_before['English'] # = 1.68
+arabic_index = lang_conv_before['Arabic']/lang_conv_before['English'] # = 5.04
+german_index = lang_conv_before['German']/lang_conv_before['English'] # = 4.48
+```  
 • Total number of users and actual conversion on each day
-language_conversion_actual = house_ads.groupby( ['date_serbed', 'language_preferred'] .agg({'user_id':'nunique', 'converted':'sum'})
-  
+```python
+lang_conv_actl = house_ads.groupby(['date_serbed', 'language_preferred'].agg({'user_id':'nunique', 'converted':'sum'})
+```  
 • Unstack the result, number of users who should have seen ads in each language and how many of those users converted each day
-expected_conversion = pd.DataFrame(language_conversion_actual.unstack(level=1))
-  
-• Create English conversion rate column for affected period, retrieve columns only from the period where the language bug was a problem
-language_conversion_actual['actual_english_conversion'] = language_conversion_actual.loc['2018-01-11':'2018-01-31'][('convert_value', 'English')]
-  
-• Expected conversion rates for each language by using
-language_conversion_actual['epxected_lang_name_rate'] = language_conversion_actual['actual_english_conversion']*lang_name_index
+```python
+expected_conversion = pd.DataFrame(lang_conv_actl.unstack(level=1))
+```  
+• English conversion rate column for affected period, retrieve columns only from the period where the language bug was a problem
+```python
+lang_conv_actl['actual_english_conversion'] = lang_conv_actl.loc['2018-01-11':'2018-01-31'][('convert_value', 'English')]
+```  
+• Expected conversion rates for each language
+```python
+lang_conv_actl['epxected_lang_name_rate'] = lang_conv_actl['actual_english_conversion']*lang_name_index
  
-language_conversion_actual ['epxected_spanish_rate'] = language_conversion_actual ['actual_english_conversion']*spanish_index
-language_conversion_actual ['epxected_arabic_rate'] = language_conversion_actual ['actual_english_conversion']*arabic_index
-language_conversion_actual ['epxected_german_rate'] = language_conversion_actual ['actual_english_conversion']*german_index
-  
+lang_conv_actl['epxected_spanish_rate'] = lang_conv_actl['actual_english_conversion']*spanish_index
+lang_conv_actl['epxected_arabic_rate'] = lang_conv_actl['actual_english_conversion']*arabic_index
+lang_conv_actl['epxected_german_rate'] = lang_conv_actl['actual_english_conversion']*german_index
+```  
 • Daily expected unbugged conversion if the language bug had not occurred
-language_conversion_actual['epxected_lang_name_conv'] = language_conversion_actual['epxected_lang_name_rate']*language_conversion_actual[('user_id', 'language_name')]/100
+```python
+lang_conv_actl['epxected_lang_name_conv'] = lang_conv_actl['epxected_lang_name_rate']*lang_conv_actl[('user_id', 'language')]/100
  
-language_conversion_actual ['expected_spanish_conv'] = language_conversion_actual ['expected_spanish_rate']* language_conversion_actual [('user_id', 'Spanish')]/100
-language_conversion_actual ['expected_arabic_conv'] = language_conversion_actual ['expected_arabic_rate']* language_conversion_actual [('user_id', 'Arabic')]/100
-language_conversion_actual ['expected_german_conv'] = language_conversion_actual ['expected_german_rate']* language_conversion_actual [('user_id', 'German')]/100
-  
+lang_conv_actl['expected_spanish_conv'] = lang_conv_actl['expected_spanish_rate']* lang_conv_actl[('user_id', 'Spanish')]/100
+lang_conv_actl['expected_arabic_conv'] = lang_conv_actl['expected_arabic_rate']* lang_conv_actl[('user_id', 'Arabic')]/100
+lang_conv_actl['expected_german_conv'] = lang_conv_actl['expected_german_rate']* lang_conv_actl[('user_id', 'German')]/100
+```  
 • Impact as the number of lost subscribers
-bug_period = language_conversion_actual.loc[ '2018-01-11':'2018-01-31']
+```python
+bug_period = lang_conv_actl.loc[ '2018-01-11':'2018-01-31']
  
 expected_subs = bug period['epxected_lang_name_conv'].agg('sum')
-expected_subs = bug period ['expected_spanish_conv'].agg('sum') + bug period ['expected_arabic_conv'].agg('sum') + bug period ['expected_german_conv'].agg('sum')
+expected_subs = bug period ['expected_spanish_conv'].agg('sum')\
+                + bug period['expected_arabic_conv'].agg('sum')\
+                + bug period['expected_german_conv'].agg('sum')
  
 actual_subs = bug period[('convert_value', 'lang_name')].agg('sum')
-actual_subs = bug period[('convert_value', 'Spanish')].sum() + bug period[('converted', 'Arabic')].sum() + bug period[('convert_value', 'German')].sum()
+actual_subs = bug period[('convert_value', 'Spanish')].sum()\
+              + bug period[('converted', 'Arabic')].sum()\
+              + bug period[('convert_value', 'German')].sum()
  
-lost_subs = expected_subs - actual_subs = 58.14 - 26 = 32.14
- 
+lost_subs = expected_subs - actual_subs # 58.14 - 26 = 32.14
+``` 
 **Conclusion:**  
-– 32 subscribers may not seem like many, but for a small company this can be vitally important, especially when expanding to new markets.
+– 33 subscribers may not seem like many, but for a small company this can be vitally important, especially when expanding to new markets.
 
