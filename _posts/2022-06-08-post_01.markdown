@@ -12,7 +12,7 @@ Conversion rate, daily count of the ads served, count of lost subscribers
 In this article, we'll look at an example of analyzing customer behavior in terms of conversion rates on different days of the week. In this case, we're talking about a specific case where the conversion rate suddenly dropped and we had to determine the cause and calculate the consequences of the error.
 
 **Data**  
-For current project used marketing dataset based on the data of an online subscription business. The libraries used are pandas and matplotlib. The data and full code are available in [repository](https://github.com/JanCinis/ad-channel-conversion-rate-case)
+For current project used marketing dataset based on the data of an online subscription business. The libraries used are pandas and matplotlib. The data and full code are available in the [repository](https://github.com/JanCinis/ad-channel-conversion-rate-case)
 
 **I. Identifying inconsistencies**  
 
@@ -33,7 +33,7 @@ def converstion_rate( df, column_names):
 	conversion_rate = subscribers/total
 	return conversion_rate
 
-DoW_conversion = converstion_rate(df, 'DoW_served', 'marketing_channel') 
+DoW_conversion = converstion_rate(df, 'DoW_served', 'marketing_channel') # results for each channel
 ```    
 • Unstack channels and plot conversion rate by day of week
 ```python
