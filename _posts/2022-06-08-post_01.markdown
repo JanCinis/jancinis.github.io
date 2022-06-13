@@ -16,7 +16,7 @@ For current project used marketing dataset based on the data of an online subscr
 
 **I. Identifying inconsistencies**  
 
-1. Step – Check whether users are more likely to convert on weekends compared with weekdays.
+ 1. Step – Check whether users are more likely to convert on weekends compared with weekdays.
 
 • Add day of week column
 ```python
@@ -49,7 +49,7 @@ plt.show()
 – ruled out natural fluctuations across the day of the week  
 – the marketing assets as the cause for decreasing house ads conversion
 
-2. Step – Check conversion by language over time, if the new marketing campaign does not apply broadly across different cultures.
+ 2. Step – Check conversion by language over time, if the new marketing campaign does not apply broadly across different cultures.
 
 • The rows where marketing channel is House Ads
 ```python
@@ -81,7 +81,7 @@ plotting_conv(conv_lang_df)
 – the English conversion rate drops around the 11th of Jan, and there do not appear to be ads served in other languages for a two week period. Needs further investigation  
 – conversion is down because there is a pattern around language preferences
  
-3. Step - identify what the problem is specifically so that the team doesn't repeat their mistake.
+ 3. Step - identify what the problem is specifically so that the team doesn't repeat their mistake.
   
 • A new column for sorting, showing if the preferred language was shown 
 ```python
