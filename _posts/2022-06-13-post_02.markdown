@@ -18,12 +18,6 @@ The main advantage of RFM analysis is that it provides meaningful information ab
 **Data**  
 For current project used online retail dataset from <a href="http://archive.ics.uci.edu/ml/datasets/online+retail" target="_blank">UCI Machine Learning Repository</a>. The libraries used pandas and datetime. The data and full code are available in the <a href="www.google.com" target="_blank">repository</a>
 
-**I. Identifying inconsistencies**  
-
-// 1. Step – Check whether users are more likely to convert on weekends compared with weekdays.
-
-• Add day of week column
-
 **I. Create a Recency Frequency Monetary table**  
 • count of unique countries
 ```python
