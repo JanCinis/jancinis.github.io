@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "RFM (Recency, Frequency, Monetary) customer scoring segmentation - Customer value analysis"
+title:  "RFM customer scoring segmentation - Customer value analysis"
 date:   2022-06-13 19:15:41 +0530
 categories: Python
 ---
-RFM table generation, top customer scoring, customer value analysis
+RFM (Recency, Frequency, Monetary) table, top customer scoring, customer value analysis
 
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_02/rfm_metrics_img.png" height="250">
 
