@@ -16,18 +16,18 @@ RFM models help us to understand how much is the client worth to the company. Th
 The main advantage of RFM analysis is that it provides meaningful information about customers while using fewer (three-dimensional) criterions as cluster attributes. This reduces the complexity of customer value analysis model without compromising its accuracy.
 
 **Data**  
-For current project used online retail dataset from <a href="http://archive.ics.uci.edu/ml/datasets/online+retail" target="_blank">UCI Machine Learning Repository</a>. The libraries used pandas and datetime. The data and full code are available in the <a href="www.google.com" target="_blank">repository</a>
+For current project used online retail dataset from <a href="http://archive.ics.uci.edu/ml/datasets/online+retail" target="_blank">UCI Machine Learning Repository</a>. The libraries used pandas and datetime. The data and full code are available in the <a href="https://github.com/JanCinis/customer-scoring-segmentation" target="_blank">repository</a>
 
 **I. Create a Recency Frequency Monetary table**  
 • count of unique countries
 ```python
 df = pd.read_excel("online_retail.xlsx")
-print(df.Country.nunique())
 ```
 • countries with the largest number of consumers
 ```python
 customer_country=df[['Country','CustomerID']].drop_duplicates()
-print(customer_country.groupby(['Country'])['CustomerID'].agg('count').reset_index().sort_values('CustomerID', ascending=False))
+print(customer_country.groupby(['Country'])['CustomerID']\
+      .agg('count').reset_index().sort_values('CustomerID', ascending=False))
 ```
 • limit analysis UK only
 ```python
@@ -74,7 +74,7 @@ df_UK['InvoiceDate'] = pd.to_datetime(df_UK['InvoiceDate'])
 • RFM table
 ```python
 rfm_tab = df_UK.groupby('CustomerID').agg({'InvoiceDate': lambda x: (calc_time - x.dt.date.max()).days, # Recency
-                                        'InvoiceNo': lambda x: len(x),      # Frequency
+                                        'InvoiceNo': lambda x: len(x),    # Frequency
                                         'TotalPrice': lambda x: x.sum()}) # Monetary Value
 
 rfm_tab['InvoiceDate'] = rfm_tab['InvoiceDate'].astype(int)
@@ -86,8 +86,8 @@ rfm_tab.rename(columns={'InvoiceDate': 'Recency',
 ```python
 print(rfm_tab.head())
 ```
-• Interpretation:
-- CustomerID has such frequency, monetary value and recency that many days
+**Interpretation:**  
+– CustomerID has such frequency, monetary value and recency that many days
 
 **II. Find the best customers**  
 • Split metrics into segments by using quartile (4 segments)
@@ -124,18 +124,21 @@ def FM_score(x,p,d):
 ```
 • Function results and sort out by adding a new column to combine RFM score
 ```python
-segmented_rfm['r_quartile'] = segmented_rfm['Recency'].apply(RS_score, args=('Recency',cust_quantiles,))
-segmented_rfm['f_quartile'] = segmented_rfm['Frequency'].apply(FM_score, args=('Frequency',cust_quantiles,))
-segmented_rfm['m_quartile'] = segmented_rfm['Monetary_value'].apply(FM_score, args=('Monetary_value',cust_quantiles,))
+segmented_rfm['r_quartile'] = segmented_rfm['Recency'].apply(RS_score,\
+                              args=('Recency',cust_quantiles,))
+segmented_rfm['f_quartile'] = segmented_rfm['Frequency'].apply(FM_score,\
+                              args=('Frequency',cust_quantiles,))
+segmented_rfm['m_quartile'] = segmented_rfm['Monetary_value'].apply(FM_score,\
+                              args=('Monetary_value',cust_quantiles,))
 
-segmented_rfm['RFM_score'] = segmented_rfm.r_quartile.map(str) \
-                            + segmented_rfm.f_quartile.map(str) \
+segmented_rfm['RFM_score'] = segmented_rfm.r_quartile.map(str)\
+                            + segmented_rfm.f_quartile.map(str)\
                             + segmented_rfm.m_quartile.map(str)
 ```
 • top 10 customers by score
 ```python
-top_10_customers = segmented_rfm[segmented_rfm['RFM_score']=='111'].sort_values('Monetary_value', ascending=False).reset_index()
-print(top_10_customers.head(10))
+top_10_customers = segmented_rfm[segmented_rfm['RFM_score']=='111']\
+                   .sort_values('Monetary_value', ascending=False).reset_index()
 ```
 • top 10 customers only by Monetary_value (TotalPrice)
 ```python
@@ -144,4 +147,4 @@ print(cust_UK_total.sort_values(ascending=False).head(10))
 ```
 
 **Conclusion:**  
-– conclusion text
+– As we can see, in this case, the top 2 customers are also the customers with the highest monetary value compared to all 
