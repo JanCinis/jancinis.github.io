@@ -1,1 +1,109 @@
-Code
+---
+layout: post
+title:  "RFM (Recency, Frequency, Monetary) customer scoring segmentation - Customer value analysis"
+date:   2022-06-13 19:15:41 +0530
+categories: Python
+---
+Conversion rate, daily count of the ads served, count of lost subscribers
+
+![image](https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/conversion_rate_resized.jpg)
+
+**Introduction**  
+Customer value analysis (CVA) is an analytic method for discovering customers’ characteristics and on this basis making further analysis to extract useful knowledge from big data.
+
+RFM models help us to understand how much is the client worth to the company. This is known as customer scoring. Based on such information, we are able to determine the efficiency of marketing campaigns and decide whether a customer is important enough for us to maintain advertising spendings.
+
+The main advantage of RFM analysis is that it provides meaningful information about customers while using fewer (three-dimensional) criterions as cluster attributes. This reduces the complexity of customer value analysis model without compromising its accuracy.
+
+**Data**  
+For current project used marketing dataset based on the data of an online subscription business. The libraries used are numpy, pandas and matplotlib. The data and full code are available in the <a href="https://github.com/JanCinis/ad-channel-conversion-rate-case" target="_blank">repository</a>
+
+**I. Identifying inconsistencies**  
+
+// 1. Step – Check whether users are more likely to convert on weekends compared with weekdays.
+
+• Add day of week column
+```python
+df = pd.read_csv('marketing_data_2021.csv', parse_dates = ['date_served'])
+df['DoW_served'] = df['date_served'].dt.dayofweek
+```
+• Function to calculate conversion rate by day of week for each channel
+```python
+def converstion_rate( df, column_names):
+	# group by column_names and calculate subscribers
+	subscribers = df[ df['convert_value'] == True].groupby(column_names)['user_id'].nunique()
+	# group by column_names and calculate total visitors  
+	total = df.groupby(column_names)['user_id'].nunique()
+	conversion_rate = subscribers/total
+	return conversion_rate
+
+DoW_conversion = converstion_rate(df, ['DoW_served', 'marketing_channel'])
+```    
+• Unstack channels and plot conversion rate by day of week
+```python
+DoW_df = pd.DataFrame(DoW_conversion.unstack(level=1))
+DoW_df.plot()
+plt.title('Conversion rate by day of week\n')
+plt.ylim(0)
+plt.show()
+```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_01/Channels_conv_rate_dow.png" height="250">
+
+**Conclusion:**  
+– ruled out natural fluctuations across the day of the week  
+– the marketing assets as the cause for decreasing house ads conversion
+
+// 2. Step – Check conversion by language over time, if the new marketing campaign does not apply broadly across different cultures.
+
+• The rows where marketing channel is House Ads
+```python
+house_ads = df[df['marketing_channel']=='House Ads']
+```  
+• Conversion by date served, and language displayed
+```python
+DoW_conversion = converstion_rate(house_ads, ['date_served', 'language_displayed'])
+```    
+• Unstack DoW_conversion and defining a function for plotting graphs
+```python
+conv_lang_df = pd.DataFrame(conv_lang_channel.unstack(level=1))
+def plotting_conversion(df):
+          	for column in df:
+                        	plt.plot( df.index, df [column])
+                        	plt.title('Daily' + column + 'retention rate\n', size = 16)
+                        	plt.ylabel('Retention rate (%)', size = 14)
+                        	plt.xlabel('Date', size = 14)
+                        	plt.show()
+                        	plt.clf()
+```  
+• Defined plotting function results
+```python
+plotting_conv(conv_lang_df)
+```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_01/Languages_conv_rate_drop.png" height="450">
+
+**Conclusion:**  
+– the English conversion rate drops around the 11th of Jan, and there do not appear to be ads served in other languages for a two week period. Needs further investigation  
+– conversion is down because there is a pattern around language preferences
+ 
+// 3. Step - identify what the problem is specifically so that the team doesn't repeat their mistake.
+  
+• A new column for sorting, showing if the preferred language was shown 
+```python
+house_ads['is_correct_lang'] = np.where(house_ads['language_displayed'] == house_ads['language_preferred'], 'Yes', 'No')
+```  
+• Group by date_served and is_correct_lang to get a daily count of the ads served
+```python
+language_check = house_ads.groupby(['date_served', 'is_correct_lang'])['is_correct_lang'].count()
+```  
+• What percentage of users were not being served ads in the right language
+```python
+language_check_df = pd.DataFrame(language_check.unstack(level=1)).fillna(0)
+language_check_df['pct'] = language_check_df['Yes']/language_check_df.sum(axis=1)
+plt.clf()
+plt.plot(language_check_df.index.values, language_check_df['pct'])
+plt.show()
+```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_01/Right_language_percentage.png" height="200">
+
+**Conclusion:**  
+– house ads have been underperforming due to serving all ads in English rather than each user's preferred language
