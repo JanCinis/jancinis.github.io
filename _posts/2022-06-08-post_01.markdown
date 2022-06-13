@@ -6,7 +6,7 @@ categories: Python
 ---
 Conversion rate, daily count of the ads served, count of lost subscribers
 
-![image](https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/conversion_rate_resized.jpg)
+![image](https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/_posts/conversion_rate_resized.jpg)
 
 **Introduction**  
 In this article, we'll look at an example of analyzing customer behavior in terms of conversion rates on different days of the week. In this case, we're talking about a specific case where the conversion rate suddenly dropped and we had to determine the cause and calculate the consequences of the error.
