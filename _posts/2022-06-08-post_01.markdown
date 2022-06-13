@@ -145,9 +145,9 @@ lang_conversion['expected_german_conv'] = lang_conversion['epxected_german_rate'
 ```python
 bug_period = lang_conversion['2021-01-11':'2021-01-31']
  
-expected_subs = bug_period ['expected_spanish_conv'].agg('sum')\
-                + bug_period ['expected_arabic_conv'].agg('sum')\
-                + bug_period ['expected_german_conv'].agg('sum')
+expected_subs = bug_period ['expected_spanish_conv'].sum()\
+                + bug_period ['expected_arabic_conv'].sum()\
+                + bug_period ['expected_german_conv'].sum()
  
 actual_subs = bug_period[('convert_value', 'Spanish')].sum()\
     		  + bug_period[('convert_value', 'Arabic')].sum()\
