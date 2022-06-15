@@ -29,7 +29,7 @@ customer_country=df[['Country','CustomerID']].drop_duplicates()
 print(customer_country.groupby(['Country'])['CustomerID']\
       .agg('count').reset_index().sort_values('CustomerID', ascending=False))
 ```
-• limit analysis UK only
+• Since 92% are from UK, let's limit analysis UK only
 ```python
 df_UK = df.loc[df['Country'] == 'United Kingdom']
 ```
@@ -47,7 +47,6 @@ quantity_min = df_UK.Quantity.min()
 ```python
 df_UK = df_UK[(df_UK['Quantity']>0)]
 quantity_min = df_UK.Quantity.min()
-print(quantity_min)
 ```
 • unique values for each column of df_UK
 ```python
