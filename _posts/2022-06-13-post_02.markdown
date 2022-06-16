@@ -29,6 +29,8 @@ customer_country=df[['Country','CustomerID']].drop_duplicates()
 print(customer_country.groupby(['Country'])['CustomerID']\
       .agg('count').reset_index().sort_values('CustomerID', ascending=False))
 ```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_02/count_of_unique_countries.png" height="200">
+
 • Since 92% are from UK, let's limit analysis UK only
 ```python
 df_UK = df.loc[df['Country'] == 'United Kingdom']
@@ -38,6 +40,8 @@ df_UK = df.loc[df['Country'] == 'United Kingdom']
 print(df_UK.isnull().sum(axis=0))
 df_UK = df_UK[pd.notnull(df['CustomerID'])]
 ```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_02/null_values.png" height="150">
+
 • minimum values in UnitPrice and Quantity columns
 ```python
 price_min = df_UK.UnitPrice.min()
@@ -54,7 +58,10 @@ def unique_counts(df_UK):
    for column in df_UK.columns:
        count = df_UK[column].nunique()
        print(column, ": ", count)
+
+unique_counts(df_UK)
 ```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_02/unique_values.png" height="140">
 
 • total price calculation
 ```python
@@ -83,8 +90,10 @@ rfm_tab.rename(columns={'InvoiceDate': 'Recency',
 ```
 • RFM metrics for each customer
 ```python
-print(rfm_tab.head())
+rfm_tab.head()
 ```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_02/RFM_metrics%20for_each_customer.png" height="200">
+
 **Interpretation:**  
 – CustomerID has such frequency, monetary value and recency that many days
 
@@ -139,11 +148,14 @@ segmented_rfm['RFM_score'] = segmented_rfm.r_quartile.map(str)\
 top_10_customers = segmented_rfm[segmented_rfm['RFM_score']=='111']\
                    .sort_values('Monetary_value', ascending=False).reset_index()
 ```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_02/top_10_customers_by_score.png" height="200">
+
 • top 10 customers only by Monetary_value (TotalPrice)
 ```python
 cust_UK_total = df_UK.groupby('CustomerID')['TotalPrice'].sum()
 print(cust_UK_total.sort_values(ascending=False).head(10))
 ```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_02/top_10%20customers_only_by_Monetary_value.png" height="200">
 
 **Conclusion:**  
 – As we can see, in this case, the top 2 customers are also the customers with the highest monetary value compared to all 
