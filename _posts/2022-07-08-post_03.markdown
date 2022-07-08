@@ -7,3 +7,33 @@ categories: Python
 Dash app, Alphavantage API, Line Graph, Dash Table
 
 <iframe src="https://stock-price-dashboard.herokuapp.com/" height="800px" width="100%" style="border:none;"></iframe>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
