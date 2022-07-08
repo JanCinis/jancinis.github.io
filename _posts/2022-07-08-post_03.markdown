@@ -1,0 +1,7 @@
+---
+layout: post
+title:  "Stock price dashboard - Dash app at Heroku"
+date:   2022-07-08 21:43:11 +0530
+categories: Python (Plotly, Dash)
+---
+Dash app, Alphavantage API, Line Graph, Dash Table
