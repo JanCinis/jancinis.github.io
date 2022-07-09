@@ -32,9 +32,6 @@ Dash app, Alphavantage API, Line Graph, Dash Table
 
 
 
-
-
-
 **Information**  
 The line chart above shows the change in Apple Inc. (APPL) stock price. Data was obtained using the API from the alphavantage.co database. 
 ```python
