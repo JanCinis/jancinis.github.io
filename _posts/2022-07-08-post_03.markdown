@@ -34,6 +34,17 @@ Dash app, Alphavantage API, Line Graph, Dash Table
 
 
 
+  
 
+  
+**Information**  
+The line chart above shows the change in Apple Inc. (APPL) stock price. Data was obtained using the API from the alphavantage.co database. 
+```python
+ttm_data, ttm_meta_data = ts.get_intraday(symbol='AAPL',interval='1min', outputsize='compact')
+```
+Since this is a free type of API, the received data is provided only for yesterday's date. Date and time can be seen when hovering over the chart or also below in the Dash table. The price used on the chart is the highest closing price of the AAPL price candle for each time marker.  
 
+The Dash app is deployed on a Heroku server, accessible via a direct link at <a href="https://stock-price-dashboard.herokuapp.com/" target="_blank">stock-price-dashboard.herokuapp.com</a>. The buy and sell buttons are not tied to actions in the code, they serve to demonstrate that they can be tied to a real exchange terminal.
 
+**Data**  
+All the data and full code that has been placed on the Heroku server is available in the GitHub <a href="https://github.com/JanCinis/stock-price-dashboard" target="_blank">repository</a>
