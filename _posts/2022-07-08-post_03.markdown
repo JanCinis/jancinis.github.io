@@ -4,9 +4,9 @@ title:  "Stock price dashboard - Dash app at Heroku"
 date:   2022-07-08 21:43:11 +0530
 categories: Python
 ---
-Dash app, Alphavantage API, Line Graph, Dash Table
+Plotly, Dash app, Alphavantage API, Docker Container, AWS Lightsail
 
-<iframe src="https://stock-price-dashboard.herokuapp.com/" height="800px" width="100%" style="border:none;"></iframe>
+<iframe src="https://dashapp-service.mbglfl3t67ni8.eu-central-1.cs.amazonlightsail.com/" height="800px" width="100%" style="border:none;"></iframe>
 
 **Information**  
 The line chart above shows the change in Apple Inc. (APPL) stock price. Data was obtained using the API from the alphavantage.co database. 
