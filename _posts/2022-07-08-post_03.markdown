@@ -8,14 +8,40 @@ Plotly, Dash app, Alphavantage API, Docker Container, AWS Lightsail
 
 <iframe src="https://dashapp-service.mbglfl3t67ni8.eu-central-1.cs.amazonlightsail.com/" height="800px" width="100%" style="border:none;"></iframe>
 
-**Information**  
+**Description**  
+The application is written in Python using mostly Plotly and Dash libraries. The solution was originally deployed on a Heroku server accessed via a direct link <a href="https://stock-price-dashboard.herokuapp.com/" target="_blank">stock-price-dashboard.herokuapp.com</a>. But since Heroku has discontinued its free plans as of November 2022, I used the capabilities of the free AWS plan to run my Dash application. So I had to dockerize the solution using Docker Desktop and then upload the created container and its image to Docker Hub. The contents of the dockerfile are summarized below:
+```python
+FROM python:3.11
+
+ENV DASH_DEBUG_MODE True
+# To access the API key in keys.py, it's necessary to define a python path inside the container
+ENV PYTHONPATH /src
+ENV PYTHONUNBUFFERED 1
+
+# add app.py folder first
+ADD src /src
+
+COPY requirements.txt .
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
+
+# copy everything else into the container
+COPY . ./
+
+EXPOSE 8050
+
+CMD ["gunicorn", "-b", "0.0.0.0:8050", "src.app:server"]
+```
+
+After successfully dockerizing and uploading the application to Docker Hub, I used the container service in AWS Lightsail with the lowest subscription plan. Due to the plan limitation, the dashboard may take a little longer to load, up to 10-15 seconds.
+
+**Dashboard**  
 The line chart above shows the change in Apple Inc. (APPL) stock price. Data was obtained using the API from the alphavantage.co database. 
 ```python
 ttm_data, ttm_meta_data = ts.get_intraday(symbol='AAPL',interval='1min', outputsize='compact')
 ```
 Since this is a free type of API, the received data is provided only for yesterday's date, weekends are excluded. Date and time can be seen when hovering over the chart or also below in the Dash table. The price used on the chart is the highest closing price of the AAPL price candle for each time marker.  
 
-The Dash app is deployed on a Heroku server, accessible via a direct link at <a href="https://stock-price-dashboard.herokuapp.com/" target="_blank">stock-price-dashboard.herokuapp.com</a>. The buy and sell buttons are not tied to actions in the code, they serve to demonstrate that they can be tied to a real exchange terminal.
+The buy and sell buttons are not tied to actions in the code, they serve to demonstrate that they can be tied to a real exchange terminal.
 
 **Data**  
-All the data and full code that has been placed on the Heroku server is available in the GitHub <a href="https://github.com/JanCinis/stock-price-dashboard" target="_blank">repository</a>
+All the data and full code that has been placed on the AWS server is available in the GitHub <a href="https://github.com/JanCinis/stock-price-dashboard" target="_blank">repository</a>
