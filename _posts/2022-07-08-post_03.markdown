@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Stock price dashboard - Dash app at Heroku"
-date:   2022-07-08 21:43:11 +0530
+title:  "Stock price dashboard - Dockerized Dash app at AWS Lightsail"
+date:   2022-09-11 21:43:11 +0530
 categories: Python
 ---
 Plotly, Dash app, Alphavantage API, Docker Container, AWS Lightsail
