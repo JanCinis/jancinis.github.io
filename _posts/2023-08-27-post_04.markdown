@@ -235,9 +235,9 @@ ELSE [Amount] END
 ```python
 #0.0%; (#0.0" %"); #
 ```
-<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture19.png" height="250">
-
 As а result, all 0% are gone from the view.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture19.png" height="250">
 
 &nbsp;
 
