@@ -204,7 +204,7 @@ Also, it’s possible to turn the measure into discrete and hide its header.
 
 This approach is useful mainly in the case when some values from the database can’t be excluded by filtering because, for example, it will also filter out dates related to these filtered values completely. Especially if it’s a numeric value and can’t be simply replaced by an empty string, and values are excluded to correctly calculate the ratio between the remaining sub-categories.
 
-<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture17.png" height="300">
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture17.png" height="200">
 
 1.) Create a new calculated field as a dimension to mark all values to be deleted as "Dropped values". Below is an example to exclude all Decline Reason values related to the accepted status.
 
@@ -235,7 +235,7 @@ ELSE [Amount] END
 ```python
 #0.0%; (#0.0" %"); #
 ```
-<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture19.png" height="350">
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture19.png" height="250">
 
 As а result, all 0% are gone from the view.
 
@@ -271,4 +271,4 @@ For % ratio a custom format might look like this:
 
 **Feedback**
 
-Thank you for reading and your interest! In case of feedback or questions feel free to reach out via Linkedin.
+Thank you for reading and your interest! In case of feedback or questions feel free to reach out via [Linkedin](https://www.linkedin.com/in/jancinis/).
