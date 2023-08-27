@@ -20,7 +20,7 @@ Below are various tips and tricks for creating visualizations in Tableau. These 
 
 **I. Create a parameter with the max. number of days set when the workbook opens**
 
-What could it be useful for?
+- What could it be useful for?
 
 To load all data up to today's date into the charts when the workbook opens, using the parameter with the max. number of days specified as a filter that’s controlled by a slider.
 
@@ -72,7 +72,7 @@ Now whenever the workbook is opened the filter is set to the maximum days for th
 
 **II. Create a Drill Down using Set Actions**
 
-What could it be useful for?
+- What could it be useful for?
 
 To be able to show all the Sub-Categories by clicking the corresponding Category. And if the Category isn't selected then it stays collapsed. See the example below, Merchant Name as Category and Shop Name as Sub-Categories.
 
@@ -126,11 +126,11 @@ This way you will be able to both drill up and down without the order of Categor
 
 **III. Creating a parameter to resize time frames for datetime bins**
 
-What could it be useful for?
+- What could it be useful for?
 
 A user-friendly and quick way to resize time frames for datetime bins, e.g. day, week, month, quarter, etc.
 
-<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture13.png" height="380">
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture13.png" height="450">
 
 1.) Create a new parameter with a string data type, allowable values defined as a list with required values, starting from minute, hour, or day, depending on the purpose. See the settings below.
 
@@ -167,7 +167,7 @@ Now it’s possible to resize datetime bins quickly from the parameter timeframe
 
 **IV. Create a calculated field to return the latest category value per consumer and date**
 
-What could it be useful for?
+- What could it be useful for?
 
 If the database has a category field that contains different values for each consumer (such as the consumer's status), which may change over time, then this calculation can be used to return the status that the consumer most recently received.
 
@@ -200,11 +200,11 @@ Also, it’s possible to turn the measure into discrete and hide its header.
 
 **V. Create a calculated field to exclude certain values from view without filtering it**
 
-What could it be useful for?
+- What could it be useful for?
 
 This approach is useful mainly in the case when some values from the database can’t be excluded by filtering because, for example, it will also filter out dates related to these filtered values completely. Especially if it’s a numeric value and can’t be simply replaced by an empty string, and values are excluded to correctly calculate the ratio between the remaining sub-categories.
 
-<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture17.png" height="200">
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture17.png" height="300">
 
 1.) Create a new calculated field as a dimension to mark all values to be deleted as "Dropped values". Below is an example to exclude all Decline Reason values related to the accepted status.
 
@@ -235,7 +235,7 @@ ELSE [Amount] END
 ```python
 #0.0%; (#0.0" %"); #
 ```
-<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture19.png" height="250">
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture19.png" height="350">
 
 As а result, all 0% are gone from the view.
 
@@ -243,7 +243,7 @@ As а result, all 0% are gone from the view.
 
 **VI. Hiding zero values on charts**
 
-What could it be useful for?
+- What could it be useful for?
 
 In case there are many zero values on the chart and hiding them makes the chart more readable.
 
