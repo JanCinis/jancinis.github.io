@@ -1,0 +1,274 @@
+---
+layout: post
+title:  "Tableau tips and tricks"
+date:   2023-08-27 20:15:41 +0530
+categories: Tableau
+---
+Calculated fields, Parameters, Drill Down, Set Actions, Functions, Formats
+
+**Introduction**
+
+Below are various tips and tricks for creating visualizations in Tableau. These tips may be useful if you are looking for:
+- How to create a date filter slider that is set to the maximum number of days (including today's date) each time you open a workbook
+- How to create a clickable dropdown of categories and their subcategories
+- How to quickly resize time frames for the datetime bins used on charts
+- How to return only the last value of a categorical variable instead of all available values 
+- How to exclude certain values from view without filtering them
+- How to hide zero values in charts
+
+&nbsp;
+
+**I. Create a parameter with the max. number of days set when the workbook opens**
+
+What could it be useful for?
+
+To load all data up to today's date into the charts when the workbook opens, using the parameter with the max. number of days specified as a filter that’s controlled by a slider.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture01.png" height="350">
+
+1.) Create a calculated field that returns the maximum date (the oldest) for the selected datetime field, regardless of any filters, using the FIXED function for this purpose.
+
+Name: _Shipment Created At DateDiff INT FIX_
+
+```python
+{FIXED :MAX([Shipment Created At DateDiff INT])}
+```
+
+2.) Create a calculated field that returns the maximum day difference between the date field from the database and today's date.
+
+Name: _Shipment Created At DateDiff INT MAX_
+
+```python
+IF INT(DATEDIFF('day', [Created At (Shipment)], TODAY())) = {FIXED : MIN([Shipment Created At DateDiff INT])} THEN
+    0
+ELSE
+    {FIXED :MAX([Shipment Created At DateDiff INT])}
+END
+```
+
+3.) Create a parameter, where for properties use the field created from step 1. and for а range of values use the field created from step 3.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture02.png" height="500">
+
+4.) Create a calculated field as a Boolean type which checks that the date difference for the selected datetime field and today’s date is not higher than the number of days from the created parameter.
+
+Name: _Shipment Date Range Filter_
+
+```python
+DATEDIFF('day', [Created At (Shipment)],Today()) <= [Shipment Date Range]
+```
+
+5.) Place the created field from step 4. to all worksheets where you need such a filter and choose True.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture03.png" height="150">
+
+6.) Show the created parameter on the dashboard layout.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture04.png" height="100">
+
+Now whenever the workbook is opened the filter is set to the maximum days for the selected datetime field from the database and is easy to control by slider.
+
+&nbsp;
+
+**II. Create a Drill Down using Set Actions**
+
+What could it be useful for?
+
+To be able to show all the Sub-Categories by clicking the corresponding Category. And if the Category isn't selected then it stays collapsed. See the example below, Merchant Name as Category and Shop Name as Sub-Categories.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture05.png" height="350">
+
+1.) Place Category onto the Rows
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture06.png" height="100">
+
+2.) Create a Set from the Category field
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture07.png" height="400">
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture08.png" height="140">
+
+3.) Create a calculated field as "Sub-Category List" and place this onto the Rows
+
+Name: _Shop Name List_
+
+```python
+IF [Merchant Name Set] THEN [Shop Name]
+ELSE "" END
+```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture09.png" height="100">
+
+4.) Create a Set Action by going to 'Worksheet' at the top left of Tableau and clicking on 'Actions...'. Next click on 'Add Actions' in the new window that pops up
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture10.png" height="400">
+
+5.) Name this Set Action as 'Change Category Set Drilldown', as a target set choose Category Set from the previous steps and make sure you have 'Remove all values from set' selected at the bottom right of this window.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture11.png" height="450">
+
+6.) Create another calculated field called 'Category List' and place this field onto the Rows
+
+Name: _Merchant Name List_
+
+```python
+IF [Merchant Name Set] THEN '▼   '
+ELSE '▶   '
+END + [Merchant Name]
+```
+
+7.) Ensure that the Category is to the left of 'Category List' in the Rows. Then right-click on Category and click on 'Show Header' to hide it from the view.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture12.png" height="300">
+
+This way you will be able to both drill up and down without the order of Category changing.
+
+&nbsp;
+
+**III. Creating a parameter to resize time frames for datetime bins**
+
+What could it be useful for?
+
+A user-friendly and quick way to resize time frames for datetime bins, e.g. day, week, month, quarter, etc.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture13.png" height="380">
+
+1.) Create a new parameter with a string data type, allowable values defined as a list with required values, starting from minute, hour, or day, depending on the purpose. See the settings below.
+
+Name: _Timeframe Step_
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture14.png" height="450">
+
+2.) Choose the date time field from the database to which the parameter will be applied
+
+3.) For the chosen field create a calculated field that would apply the DATETRUNC() function on different levels, e.g. day/week/month/etc., depending on the current value of the parameter.
+
+Name: _Order Created TimeFrame_
+
+```python
+CASE [Timeframe Step]
+WHEN "Day" THEN DATETRUNC('day', [Order Created At])
+WHEN "Week" THEN DATETRUNC('week', [Order Created At])
+WHEN "Month" THEN DATETRUNC('month', [Order Created At])
+WHEN "Quarter" THEN DATETRUNC('quarter', [Order Created At])
+WHEN "Year" THEN DATETRUNC('year', [Order Created At])
+WHEN "Decade" THEN DATETRUNC('year', DATEADD('year', -YEAR([Order Created At])%10, [Order Created At]))
+END
+```
+
+Since decade isn’t defined in the default Tableau’s DATETRUNC function, an additional workaround was required, using the DATEADD function as stated above.
+
+4.) Place the created calculated field from step 3. to Columns, then right-click to this pill and choose Exact Date, then right-click again and choose discrete.
+
+5.) Right-click on the parameter from the parameters list and choose Show Parameter.
+
+Now it’s possible to resize datetime bins quickly from the parameter timeframe dropdown menu.
+
+&nbsp;
+
+**IV. Create a calculated field to return the latest category value per consumer and date**
+
+What could it be useful for?
+
+If the database has a category field that contains different values for each consumer (such as the consumer's status), which may change over time, then this calculation can be used to return the status that the consumer most recently received.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture15.png" height="150">
+
+1.) Create a calculated field that returns the latest consumer status. In this example, status is related not to user ID, but to consumer email and only orders with a certain decision (accepted). For date, the Order Created At date field is used.
+
+Name: _Consumer Status Latest_
+
+```python
+IF [Order Created At] = {FIXED [Billing Address Email], [Decision]: MAX([Order Created At] )} 
+THEN [Consumer Status] END
+```
+
+2.) In case of possible null values, for а certain date or any other additional fields as the Decision field from the example, create a measure placeholder using for example MAX(0) function.
+
+Name: _Placeholder_
+
+```python
+MAX(0)
+```
+
+3.) Place such a placeholder in a column and switch it to Text in Marks. Into Marks place a calculated field created from step 1.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture16.png" height="250">
+
+Also, it’s possible to turn the measure into discrete and hide its header.
+
+&nbsp;
+
+**V. Create a calculated field to exclude certain values from view without filtering it**
+
+What could it be useful for?
+
+This approach is useful mainly in the case when some values from the database can’t be excluded by filtering because, for example, it will also filter out dates related to these filtered values completely. Especially if it’s a numeric value and can’t be simply replaced by an empty string, and values are excluded to correctly calculate the ratio between the remaining sub-categories.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture17.png" height="200">
+
+1.) Create a new calculated field as a dimension to mark all values to be deleted as "Dropped values". Below is an example to exclude all Decline Reason values related to the accepted status.
+
+Name: _Decline Reason w/o Accepted_
+
+```python
+IF [status] = "accepted" THEN " Dropped values"
+ELSE [Decline Reason] END
+```
+
+2.) Create a new calculated field as a measure to zero all amounts related to "Dropped values". Below is an example to exclude all Accepted amounts related to the accepted status.
+
+Name: _Amount w/o Accepted_
+
+```python
+IF [status] = "accepted" THEN 0
+ELSE [Amount] END
+```
+
+3.) Place the created dimension in rows and the created measure in columns.
+
+4.) Calculate the ratio between the remaining sub-categories amounts by quick calculation for the created measure field from step 3. Right-click and choose Quick Table Calculation – Percent of Total.
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture18.png" height="450">
+
+5.) Zero % values for the dropped sub-category can be hidden using the steps described in hint VI. Right-click on the used measure with the quick table calculation and select Format. And for number format choose Custom format then copy paste the next code:
+
+```python
+#0.0%; (#0.0" %"); #
+```
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture19.png" height="250">
+
+As а result, all 0% are gone from the view.
+
+&nbsp;
+
+**VI. Hiding zero values on charts**
+
+What could it be useful for?
+
+In case there are many zero values on the chart and hiding them makes the chart more readable.
+
+1.) Click on the column in the table that you’d like to format
+
+2.) Choose Custom and then enter ## This would hide the zero values in the tables.
+
+3.) In case you need to do additional formatting as a currency or % as well, apply the formatting that you’d like first by applying them as currency € sign, etc.
+
+4.) And then go into the custom format option, where the formatting that you chose is pre-filled. Just add the “#” at the end after the semi-colon “;”
+
+For currency a custom format might look like this:
+```python
+# ##0" €"; (# ##0" €"); #
+```
+
+For % ratio a custom format might look like this:
+```python
+#0.0%; (#0.0" %"); #
+```
+
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture20.png" height="350">
+
+&nbsp;
+
+**Feedback**
+
+Thank you for reading and your interest! In case of feedback or questions feel free to reach out via Linkedin.
