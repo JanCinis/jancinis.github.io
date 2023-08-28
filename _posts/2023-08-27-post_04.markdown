@@ -30,7 +30,7 @@ To load all data up to today's date into the charts when the workbook opens, usi
 
 Name: _Shipment Created At DateDiff INT FIX_
 
-```python
+```java
 {FIXED :MAX([Shipment Created At DateDiff INT])}
 ```
 
@@ -38,7 +38,7 @@ Name: _Shipment Created At DateDiff INT FIX_
 
 Name: _Shipment Created At DateDiff INT MAX_
 
-```python
+```java
 IF INT(DATEDIFF('day', [Created At (Shipment)], TODAY())) = {FIXED : MIN([Shipment Created At DateDiff INT])} THEN
     0
 ELSE
@@ -54,7 +54,7 @@ END
 
 Name: _Shipment Date Range Filter_
 
-```python
+```java
 DATEDIFF('day', [Created At (Shipment)],Today()) <= [Shipment Date Range]
 ```
 
@@ -92,7 +92,7 @@ To be able to show all the Sub-Categories by clicking the corresponding Category
 
 Name: _Shop Name List_
 
-```python
+```java
 IF [Merchant Name Set] THEN [Shop Name]
 ELSE "" END
 ```
@@ -110,7 +110,7 @@ ELSE "" END
 
 Name: _Merchant Name List_
 
-```python
+```java
 IF [Merchant Name Set] THEN '▼   '
 ELSE '▶   '
 END + [Merchant Name]
@@ -144,7 +144,7 @@ Name: _Timeframe Step_
 
 Name: _Order Created TimeFrame_
 
-```python
+```java
 CASE [Timeframe Step]
 WHEN "Day" THEN DATETRUNC('day', [Order Created At])
 WHEN "Week" THEN DATETRUNC('week', [Order Created At])
@@ -177,7 +177,7 @@ If the database has a category field that contains different values for each con
 
 Name: _Consumer Status Latest_
 
-```python
+```java
 IF [Order Created At] = {FIXED [Billing Address Email], [Decision]: MAX([Order Created At] )} 
 THEN [Consumer Status] END
 ```
@@ -186,7 +186,7 @@ THEN [Consumer Status] END
 
 Name: _Placeholder_
 
-```python
+```java
 MAX(0)
 ```
 
@@ -210,7 +210,7 @@ This approach is useful mainly in the case when some values from the database ca
 
 Name: _Decline Reason w/o Accepted_
 
-```python
+```java
 IF [status] = "accepted" THEN " Dropped values"
 ELSE [Decline Reason] END
 ```
@@ -219,7 +219,7 @@ ELSE [Decline Reason] END
 
 Name: _Amount w/o Accepted_
 
-```python
+```java
 IF [status] = "accepted" THEN 0
 ELSE [Amount] END
 ```
@@ -232,7 +232,7 @@ ELSE [Amount] END
 
 5.) Zero % values for the dropped sub-category can be hidden using the steps described in hint VI. Right-click on the used measure with the quick table calculation and select Format. And for number format choose Custom format then copy paste the next code:
 
-```python
+```java
 #0.0%; (#0.0" %"); #
 ```
 As а result, all 0% are gone from the view.
@@ -256,12 +256,12 @@ In case there are many zero values on the chart and hiding them makes the chart 
 4.) And then go into the custom format option, where the formatting that you chose is pre-filled. Just add the “#” at the end after the semi-colon “;”
 
 For currency a custom format might look like this:
-```python
+```java
 # ##0" €"; (# ##0" €"); #
 ```
 
 For % ratio a custom format might look like this:
-```python
+```java
 #0.0%; (#0.0" %"); #
 ```
 
