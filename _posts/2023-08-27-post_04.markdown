@@ -130,7 +130,7 @@ This way you will be able to both drill up and down without the order of Categor
 
 A user-friendly and quick way to resize time frames for datetime bins, e.g. day, week, month, quarter, etc.
 
-<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture13.png" height="450">
+<img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture13.png" height="350">
 
 1.) Create a new parameter with a string data type, allowable values defined as a list with required values, starting from minute, hour, or day, depending on the purpose. See the settings below.
 
