@@ -48,6 +48,8 @@ END
 
 3.) Create a parameter, where for properties use the field created from step 1. and for а range of values use the field created from step 3.
 
+Name: _Shipment Date Range_
+
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture02.png" height="500">
 
 4.) Create a calculated field as a Boolean type which checks that the date difference for the selected datetime field and today’s date is not higher than the number of days from the created parameter.
