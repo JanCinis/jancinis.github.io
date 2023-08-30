@@ -26,7 +26,15 @@ To load all data up to today's date into the charts when the workbook opens, usi
 
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture01.png" height="350">
 
-1.) Create a calculated field that returns the maximum date (the oldest) for the selected datetime field, regardless of any filters, using the FIXED function for this purpose.
+1.) Create a calculated field that returns the difference between the selected datetime field and today's date as an integer.
+
+Name: _Shipment Created At DateDiff INT_
+
+```java
+INT(DATEDIFF('day', [Created At (Shipment)], TODAY()))
+```
+
+2.) Create a calculated field that returns the maximum number (for the oldest date) for the calculated field from the previous step, regardless of any filters, using the FIXED function for this purpose.
 
 Name: _Shipment Created At DateDiff INT FIX_
 
@@ -34,25 +42,25 @@ Name: _Shipment Created At DateDiff INT FIX_
 {FIXED :MAX([Shipment Created At DateDiff INT])}
 ```
 
-2.) Create a calculated field that returns the maximum day difference between the date field from the database and today's date.
+3.) Create a calculated field that returns the maximum day difference between the date field from the database and today's date.
 
 Name: _Shipment Created At DateDiff INT MAX_
 
 ```java
-IF INT(DATEDIFF('day', [Created At (Shipment)], TODAY())) = {FIXED : MIN([Shipment Created At DateDiff INT])} THEN
+IF [Shipment Created At DateDiff INT] = {FIXED : MIN([Shipment Created At DateDiff INT])} THEN
     0
 ELSE
     {FIXED :MAX([Shipment Created At DateDiff INT])}
 END
 ```
 
-3.) Create a parameter, where for properties use the field created from step 1. and for а range of values use the field created from step 3.
+4.) Create a parameter, where for properties use the field created from step 2. and for а range of values use the field created from step 3.
 
 Name: _Shipment Date Range_
 
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture02.png" height="500">
 
-4.) Create a calculated field as a Boolean type which checks that the date difference for the selected datetime field and today’s date is not higher than the number of days from the created parameter.
+5.) Create a calculated field as a Boolean type which checks that the date difference for the selected datetime field and today’s date is not higher than the number of days from the created parameter.
 
 Name: _Shipment Date Range Filter_
 
@@ -60,11 +68,11 @@ Name: _Shipment Date Range Filter_
 DATEDIFF('day', [Created At (Shipment)],Today()) <= [Shipment Date Range]
 ```
 
-5.) Place the created field from step 4. to all worksheets where you need such a filter and choose True.
+6.) Place the created field from step 5. to all worksheets where you need such a filter and choose True.
 
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture03.png" height="150">
 
-6.) Show the created parameter on the dashboard layout.
+7.) Show the created parameter on the dashboard layout.
 
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture04.png" height="100">
 
