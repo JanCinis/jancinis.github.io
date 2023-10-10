@@ -6,7 +6,7 @@ categories: Python
 ---
 Plotly, Dash app, Alphavantage API, Docker Container, AWS Lightsail
 
-<iframe src="https://dashapp-service.mbglfl3t67ni8.eu-central-1.cs.amazonlightsail.com/" height="800px" width="100%" style="border:none;"></iframe>
+<iframe src="https://container-service-1.mbglfl3t67ni8.eu-central-1.cs.amazonlightsail.com/" height="800px" width="100%" style="border:none;"></iframe>
 
 **Description**  
 The application is written in Python using mostly Plotly and Dash libraries. The solution was originally deployed on a Heroku server accessed via a direct link <a href="https://stock-price-dashboard.herokuapp.com/" target="_blank">stock-price-dashboard.herokuapp.com</a>. But since Heroku has discontinued its free plans as of November 2022, I used the capabilities of the AWS Lightsail plan to run my Dash application. So I had to dockerize the solution using Docker Desktop and then upload the created container and its image to Docker Hub. The full content of my dockerfile is provided below:
