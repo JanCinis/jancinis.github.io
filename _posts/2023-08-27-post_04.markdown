@@ -175,11 +175,11 @@ Now it’s possible to resize datetime bins quickly from the parameter timeframe
 
 &nbsp;
 
-**IV. Create a calculated field to return the latest category value per consumer and date**
+**IV. Create a calculated field to return the latest category value**
 
 - What could it be useful for?
 
-If the database has a category field that contains different values for each consumer (such as the consumer's status), which may change over time, then this calculation can be used to return the status that the consumer most recently received.
+If the database has a category field that contains different values e.g. for each consumer (such as the consumer's status), which may change over time, then this calculation can be used to return the status that the consumer most recently received.
 
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture15.png" height="150">
 
@@ -208,7 +208,29 @@ Also, it’s possible to turn the measure into discrete and hide its header.
 
 &nbsp;
 
-**V. Create a calculated field to exclude certain values from view without filtering it**
+
+**V. Create a calculated field to return the latest numerical value**
+
+- What could it be useful for?
+
+If there are numeric fields in the database that are already aggregated and it is required to return only the last value depending on the last timestamp value.
+
+1.) Create a calculated field that returns the latest value of the paid amount total. In this example, paid amount is again related not to consumer email and for the date as a timestamp the Order Created At date field is used.
+
+Name: _Paid Amount Total Latest_
+
+```java
+SUM(
+IF [Order Created At] ={ FIXED [Billing Address Email]:MAX([Order Created At])} THEN [Paid Amount Total]
+END)
+```
+2.) Place such a calculated field in a column and convert it to a discrete field.
+
+3.) Double check that the correct and last value is indeed displayed :)
+
+&nbsp;
+
+**VI. Create a calculated field to exclude certain values from view without filtering it**
 
 - What could it be useful for?
 
@@ -251,7 +273,7 @@ As а result, all 0% are gone from the view.
 
 &nbsp;
 
-**VI. Hiding zero values on charts**
+**VII. Hiding zero values on charts**
 
 - What could it be useful for?
 
