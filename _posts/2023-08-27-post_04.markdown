@@ -175,7 +175,7 @@ Now it’s possible to resize datetime bins quickly from the parameter timeframe
 
 &nbsp;
 
-**IV. Create a calculated field to return the latest category value**
+**IV. Create a calculated field to return the latest categorical value**
 
 - What could it be useful for?
 
