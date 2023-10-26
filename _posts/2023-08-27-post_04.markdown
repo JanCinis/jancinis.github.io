@@ -226,7 +226,7 @@ END)
 ```
 2.) Place such a calculated field in a column and convert it to a discrete field.
 
-3.) Double check that the correct and last value is indeed displayed :)
+Remember that the calculation will work regardless of the filters used in the worksheet, because of the FIXED function.
 
 &nbsp;
 
