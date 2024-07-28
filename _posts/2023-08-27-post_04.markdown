@@ -234,7 +234,9 @@ Remember that the calculation will work regardless of the filters used in the wo
 
 - What could it be useful for?
 
-This approach is useful mainly in the case when some values from the database can’t be excluded by filtering because, for example, it will also filter out dates related to these filtered values completely. Especially if it’s a numeric value and can’t be simply replaced by an empty string, and values are excluded to correctly calculate the ratio between the remaining sub-categories.
+This approach is useful mainly in the case when some values can’t be excluded from view by filtering because, for example, it will also exclude related dates related.
+
+See the example below. If Accepted volumes are filtered out, then the entire days of 12 and 26 July 23 will be dropped, what might be unwanted. Additionally, Accepted values are zeroed out to correctly calculate the ratio between the remaining sub-categories (Reasons).
 
 <img src="https://raw.githubusercontent.com/JanCinis/jancinis.github.io/main/assets/img_post_04/Picture17.png" height="200">
 
@@ -243,7 +245,7 @@ This approach is useful mainly in the case when some values from the database ca
 Name: _Decline Reason w/o Accepted_
 
 ```java
-IF [status] = "accepted" THEN " Dropped values"
+IF [status] = "accepted" THEN "Dropped values"
 ELSE [Decline Reason] END
 ```
 
